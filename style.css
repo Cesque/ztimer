@@ -1,0 +1,103 @@
+body {
+  background-color: #f6f6f6;
+}
+
+.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c1 {
+  width: 800;
+  /*padding-left: 40px;
+  padding-right: 40px;*/
+}
+
+.alert {
+  padding: 7px
+}
+
+.disabled {
+  color: #666 !important;
+}
+
+/* timer styles*/
+
+#timer {
+  font-size: 7em;
+  text-align: center;
+  vertical-align: middle;
+  font-weight: normal;
+  color: #434a54
+}
+
+.timer-inspection {
+  color: #E9573F !important;
+}
+
+/* session panel styles*/
+table {
+  empty-cells: show;
+}
+
+.solvescramble {
+  font-size: 0.8em;
+}
+
+.sessionbody {
+  height: inherit
+}
+
+.solve-valid {
+
+}
+
+.solve-penalty {
+  text-shadow: 0px 1px 0px #FFCE54;
+}
+
+.solve-dnf {
+  font-weight: bold;
+  color: #E9573F;
+}
+
+.solve-link {
+  color: #434a54;
+}
+
+.solve-link:hover {
+  color: #E9573F;
+}
+/* scramble styles*/
+
+#scramble {
+  font-size: 2em;
+  text-align: center;
+  font-weight: normal;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.scramblebody {
+  padding: 10px;
+}
+
+.sU {
+  color: #F6BB42;
+}
+.sD {
+  color: #8CC152;
+}
+.sF {
+  color: #E9573F;
+}
+.sB {
+  color: #967ADC;
+}
+.sL {
+  color: #4A89DC;
+}
+.sR {
+  color: #D770AD;
