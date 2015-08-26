@@ -23,6 +23,8 @@ body {
   color: #eee !important;
 }
 
+
+
 /* timer styles*/
 
 #timer {
@@ -50,6 +52,11 @@ body {
   padding: 10px;
 }
 
+.btn-primary {
+  background-color: #19B5FE;
+  border: none;
+}
+
 /* session panel styles*/
 table {
   empty-cells: show;
@@ -57,6 +64,11 @@ table {
 
 .solvescramble {
   font-size: 0.9em;
+}
+
+.card-header {
+  background-color: #19B5FE;
+  color: #eee;
 }
 
 .sessionbody {
@@ -80,7 +92,6 @@ table {
 .sessionbody #right-col-tabs li a:hover {
   border-color: #19B5FE #19B5FE #ddd !important;
 }
-
 .sessionbody #right-col-tabs li a.active,
 .sessionbody #right-col-tabs li a.active:hover {
   color: #373a3c;
@@ -158,4 +169,28 @@ table {
 }
 .sR {
   color: #D770AD;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*dark mode*/
+body.darkmode {
+  background-color: #21211c;
+}
+.darkmode .card {
+  background-color: #373734;
+  border-color: #111111;
+}
+.darkmode .card-header {
+  color: #222222;
 }
