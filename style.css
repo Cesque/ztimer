@@ -20,7 +20,7 @@ body {
 }
 
 .disabled {
-  color: #666 !important;
+  color: #eee !important;
 }
 
 /* timer styles*/
@@ -33,8 +33,21 @@ body {
   color: #434a54
 }
 
+/* overwrite the non-rounded left corners of the button */
+#scramble-type-button {
+  border-radius: 5px;
+}
+
+.timer-box {
+  padding: 30px;
+}
+
 .timer-inspection {
   color: #E9573F !important;
+}
+
+.timer-buttons {
+  padding: 10px;
 }
 
 /* session panel styles*/
@@ -43,11 +56,55 @@ table {
 }
 
 .solvescramble {
-  font-size: 0.8em;
+  font-size: 0.9em;
 }
 
 .sessionbody {
-  height: inherit
+  height: inherit;
+  padding: 0px;
+}
+
+.sessionbody #right-col-tabs {
+  background-color: #19B5FE;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+.sessionbody #right-col-tabs li {
+  padding: 0px !important;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+.sessionbody #right-col-tabs li a {
+  color: #eee;
+}
+.sessionbody #right-col-tabs li a:hover {
+  border-color: #19B5FE #19B5FE #ddd !important;
+}
+
+.sessionbody #right-col-tabs li a.active,
+.sessionbody #right-col-tabs li a.active:hover {
+  color: #373a3c;
+  border-color: #19B5FE #19B5FE transparent !important;
+}
+
+#session-solves {
+  min-height: 300px;
+}
+#settings {
+  min-height: 300px;
+}
+.tab-pane {
+  display: none;
+}
+.tab-pane.active {
+  display: block;
+}
+
+.settings-container {
+  padding: 0px;
+}
+.sessionbody #settings-list li:first-child {
+  border-top: none;
 }
 
 .solve-valid {
@@ -55,7 +112,7 @@ table {
 }
 
 .solve-penalty {
-  text-shadow: 0px 1px 0px #FFCE54;
+  text-shadow: 0px 1px 2px #FFCE54;
 }
 
 .solve-dnf {
@@ -73,7 +130,7 @@ table {
 /* scramble styles*/
 
 #scramble {
-  font-size: 2em;
+  font-size: 1.6em;
   text-align: center;
   font-weight: normal;
   margin-top: 5px;
@@ -101,3 +158,4 @@ table {
 }
 .sR {
   color: #D770AD;
+}

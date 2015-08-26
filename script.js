@@ -2,6 +2,13 @@ var generators = {
   '3x3':new Scrambo().type('333')
 }
 
+var defaultsettings = {
+  colorise: true,
+  darkmode: false
+}
+
+var settings;
+
 var scramble = ''
 var timer = 0.0;
 var timerState = 'stopped'
@@ -16,12 +23,14 @@ function resetTimer() {
   $('#timer').text(timer.toFixed(2))
 }
 
+// start the timer
 function startTimer() {
   start = new Date().getTime();
   timerState = 'started';
   updateTimer()
 }
 
+// called every 10ms while the timer is running
 function updateTimer() {
   var time = new Date().getTime() - start;
   timer = time/1000;
@@ -33,6 +42,7 @@ function updateTimer() {
   }
 }
 
+// start inspection time
 function startInspection() {
   $('#timer').addClass('timer-inspection')
   start = new Date().getTime();
@@ -41,6 +51,7 @@ function startInspection() {
   updateInspection()
 }
 
+// called every 10ms while inspection is happening
 function updateInspection() {
   //TODO: fix timer 0.5s bug.
   var time = new Date().getTime() - start;
@@ -68,23 +79,23 @@ function updateInspection() {
   }, 10);
 }
 
+// stop the inspection time and start the timer
 function stopInspection() {
   $('#timer').removeClass('timer-inspection')
   resetTimer();
   startTimer();
 }
 
+// stop the timer and add the solve to the list
 function stopTimer() {
   timerState = 'stopped'
   var solvetime = timer.toFixed(2);
-  /*var tooltip = $('#solves').append($('<tr><td>' + solvetime + '</td>' +
-  '<td><span class="solvescramble">' + scramble + '</span></td>' +
-  '<td><button type="button" class="btn btn-danger btn-xs deletesolvebtn">Delete</button></td></tr>'))*/
   addSolve(solvetime)
   updateSolvesListHandlers();
   getScramble();
 }
 
+// if user DNF, then add a DNF solve to the solve list, otherwise add a normal solve
 function addSolve(time) {
   if(time === 'dnf') {
     addDNF();
@@ -93,6 +104,8 @@ function addSolve(time) {
   }
 }
 
+// adds a new solve time, and either styles it default
+// or add a different stlye if the solve has a penalty
 function addValidSolve(time) {
   if(penalty > 0) {
     //penalty: do styling/adding classes here
@@ -106,11 +119,13 @@ function addValidSolve(time) {
   }
 }
 
+// adds a new solve time and styles it with the DNF style
 function addDNF() {
   var cell = addSolveHelper('DNF');
   cell.addClass('solve-dnf')
 }
 
+// adds a new cell with the most recent solve, and return that cell
 function addSolveHelper(text) {
   //TODO: fix solve list so it actually works like a list. maybe abandon table idea?
   var r;
@@ -135,7 +150,9 @@ function updateSolvesListHandlers() {
 function getScramble() {
     scramble = generators['3x3'].get()[0]
     $('#scramble').text(scramble)
-    coloriseScramble();
+    if(settings.colorise) {
+      coloriseScramble();
+    }
 }
 
 //colorises the scramble so certain side turns are colored the same
@@ -155,8 +172,29 @@ function coloriseScramble() {
   $('#scramble').html(colorised.join(' '))
 }
 
+function initSettings() {
+  for(var setting in settings) {
+    $('input[data-setting-name="' + setting + '"]').prop('checked',settings[setting])
+  }
+  $('#settings-list input').on('change', function(e) {
+    var cb = $(this)
+    var setting = cb.attr('data-setting-name')
+    settings[setting] = cb.prop('checked')
+
+    //save new settings to cookies
+    Cookies.set('settings', settings)
+    console.log(settings)
+  })
+}
+
 //when the page is ready to do stuff
 $(document).ready(() => {
+  //get settings from cookies
+  settings = Cookies.getJSON('settings') || defaultsettings
+  //set all settings checkboxes to the correct value
+  //and add event listeners to checkboxes
+  initSettings();
+
   //get a new scramble on button press
   $('#getscramble').click(() => {getScramble()});
   //get first scramble
@@ -173,8 +211,11 @@ $(document).ready(() => {
     }
   });
 
-  //set up first row in solves list
-  $('#solves').append('<tr>' + '<td class="solve"></td>'.repeat(solvetablewidth) + '</tr>')
+  //init solve list/settings tabs
+  $('#right-col-tabs a').click(function (e) {
+    e.preventDefault()
+    $(this).tab('show')
+  })
 
   //handle spacebar pressing
   $('body').keyup(event => {
