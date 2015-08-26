@@ -8,6 +8,11 @@ body {
   padding-right: 40px;*/
 }
 
+h1 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .alert {
   padding: 7px
 }
@@ -124,7 +129,8 @@ table {
   padding: 0px;
 }
 .solves-container {
-  padding: 10px;
+  /*padding: 10px;*/
+  font-size: 0.8em;
 }
 .sessionbody #settings-list li:first-child {
   border-top: none;
@@ -134,9 +140,12 @@ table {
 }
 .settings-container h5 {
   margin-bottom: 15px;
+  margin-top: 15px;
 }
 
-
+.solves-this-session {
+  margin-right: 15px;
+}
 
 .solve-text {
   padding: 5px;
