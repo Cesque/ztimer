@@ -34,23 +34,22 @@
                 </div><!-- timer-box -->
               </div><!-- row -->
               <div class="row timer-buttons">
-                <div class="col-md-4">
+                <div class="col-md-8">
                   <div class="scrambleselect">
                     <span class="card-text">Scramble type:</span>
                     <div class="input-group-btn" style="display: inline">
-                      <button type="button" id="scramble-type-button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"><span id="scrambletypetext">3x3</span> <span class="caret"></span></button>
+                      <button type="button" id="scramble-type-button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown"><span id="scrambletypetext">3x3</span> <span class="caret"></span></button>
                       <ul class="dropdown-menu" id="scrambletypelist">
-                        <li><a href="#">3x3</a></li>
-                        <li><a href="#" class="disabled">4x4</a></li>
-                        <li><a href="#" class="disabled">5x5</a></li>
+                        <li><a href="#" data-scramble-type="2x2">2x2</a></li>
+                        <li><a href="#" data-scramble-type="3x3">3x3</a></li>
+                        <li><a href="#" data-scramble-type="4x4">4x4</a></li>
+                        <li><a href="#" data-scramble-type="5x5">5x5</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="#" class="disabled">Pyraminx</a></li>
+                        <li><a href="#" data-scramble-type="pyraminx">Pyraminx</a></li>
                       </ul><!-- dropdown -->
                     </div><!-- input-group-btn -->
                   </div><!-- scrambleselect -->
                 </div><!-- col-md-4 -->
-                <div class="col-md-4">
-                </div>
                 <div class="col-md-4">
                   <button type="button" class="btn btn-primary btn-block" id="getscramble"><span class="glyphicon glyphicon-refresh"></span> Scramble</button>
                 </div><!-- col-md-4 -->
@@ -69,12 +68,53 @@
                   </li><!-- li -->
                 </ul><!-- nav ul -->
                 <div id="session-solves" role="tabpanel" class="tab-pane active">
-                  <div class="solves-container">
-                  </div>
+                  <ul class="list-group list-group-flush" id="settings-list">
+                    <li class="list-group-item">
+                      <div class="solves-container">
+                        Solves this session:
+                        <button type="button" id="reset-button" class="btn btn-danger-outline btn-sm">Reset</button>
+                        <button type="button" disabled id="submit-button" class="btn btn-success btn-sm">Submit</button>
+                      </div>
+                    </li>
+                    <li class="list-group-item">
+                      <div class="solves-container solves-list">
+                      </div>
+                    </li>
+                    <li class="list-group-item">
+                    <div class="solve-info-box">
+                      <div class="solve-info-line">Time: <span id='solve-info-time'></span></div>
+                      <div class="solve-info-line">Penalty: <span id='solve-info-penalty'></span></div>
+                      <div class="solve-info-line">Type: <span id='solve-info-type'></span></div>
+                      <div class="solve-info-line">Scramble: <span id='solve-info-scramble'></span></div>
+                      <div class="divider"></div>
+                      <div class="solve-info-line">ID: <span id='solve-info-id'></span></div>
+                      <div class="solve-info-line">Tags: <span id='solve-info-tags'></span></div>
+                      <div class="solve-info-line">Comments: <span id='solve-info-comment'></span></div>
+                      <div class="divider"></div>
+                      <button type="button" id="penalty-button" class="btn btn-warning-outline btn-sm">Penalty</button>
+                      <button type="button" id="dnf-button"class="btn btn-warning-outline btn-sm">DNF</button>
+                      <button type="button" id="delete-button" class="btn btn-danger btn-sm">Delete</button>
+                    </div>
+                    </li>
                 </div><!-- session-solves -->
                 <div id="settings" role="tabpanel" class="tab-pane">
                   <div class="settings-container">
                     <ul class="list-group list-group-flush" id="settings-list">
+                      <li class="list-group-item">
+                        <h5>Rules</h5>
+                        <div class="checkbox">
+                          <label>
+                            <input type="checkbox" id="setting-inspection" value="" data-setting-name="inspection">
+                            Use WCA inspection
+                          </label>
+                        </div>
+                        <div class="checkbox">
+                          <label>
+                            <input type="checkbox" id="setting-hidetimer" value="" data-setting-name="hidetimer">
+                            Hide timer while solving
+                          </label>
+                        </div>
+                      </li><!-- UI group -->
                       <li class="list-group-item">
                         <h5>UI</h5>
                         <div class="checkbox">
@@ -85,11 +125,11 @@
                         </div>
                         <div class="checkbox">
                           <label>
-                            <input type="checkbox" id="setting-colorise" value="" data-setting-name="darkmode">
+                            <input type="checkbox" id="setting-darkmode" value="" data-setting-name="darkmode">
                             Night mode
                           </label>
                         </div>
-                      </li>
+                      </li><!-- UI group -->
                     </ul><!--settings list ul-->
                   </div>
                 </div>

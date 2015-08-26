@@ -1,15 +1,20 @@
 
 // different puzzle generators
 var generators = {
-  '3x3':new Scrambo().type('333')
+  '2x2':new Scrambo().type('222'),
+  '3x3':new Scrambo().type('333'),
+  '4x4':new Scrambo().type('444'),
+  '5x5':new Scrambo().type('555'),
+
+  'pyraminx':new Scrambo().type('pyram'),
 };
 
 // default settings, in case the cookie is not set
 var defaultsettings = {
   colorise: true,
-  darkmode: false,
+  darkmode: true,
   inspection: true,
-  hidetimer: true
+  hidetimer: false
 };
 
 // holds the current settings
@@ -17,7 +22,11 @@ var settings;
 
 var solves = [];
 var solveid = 0;
+var targetsolve = null;
 
+var inspectiontime = 2;
+
+var currentgenerator = '3x3'
 // the current scramble as a string
 var scramble = '';
 
@@ -32,6 +41,7 @@ var skipnextupdate = false;
 var start = new Date().getTime();
 
 function resetTimer() {
+  timerState = 'stopped'
   timer = 0;
   $('#timer').text(timer.toFixed(2));
 }
@@ -50,7 +60,7 @@ function startInspection() {
   skipnextupdate = false;
   $('#timer').addClass('timer-inspection');
   start = new Date().getTime();
-  timer = 15.00;
+  timer = inspectiontime;
   timerState = 'inspection';
   updateInspection();
 }
@@ -58,6 +68,9 @@ function startInspection() {
 // called every 10ms while the timer is running
 function updateTimer() {
   //so that this function isn't erroneously called an extra time after stopInspection()
+  if(skipnextupdate) {
+    return;
+  }
   var time = new Date().getTime() - start;
   timer = time/1000;
   if(settings.hidetimer) {
@@ -82,7 +95,7 @@ function updateInspection() {
   var time = new Date().getTime() - start;
   var timer2 = time/1000;
   //for some reason the timer was cutting off the first 0.5s
-  timer = 15.5 - timer2;
+  timer = (inspectiontime + 0.5) - timer2;
   if(timer > 0) {
     //within inspection time
     $('#timer').text(timer.toFixed(0));
@@ -91,7 +104,11 @@ function updateInspection() {
     // +2 penalty
     $('#timer').text('+2 penalty');
     penalty = +2;
-  } else if (timer <= -2) {
+  } else if (timer <= -2 && timer > -4) {
+    // +4 penalty
+    $('#timer').text('+4 penalty');
+    penalty = +4;
+  } else if (timer <= -4) {
     // did not finish
     $('#timer').text('DNF');
     timerState = 'dnf';
@@ -117,9 +134,10 @@ function stopTimer() {
   skipnextupdate = true;
   timerState = 'stopped';
   var solvetime = timer.toFixed(2);
-  $('timer').text(solvetime);
-  addSolve(solvetime);
-  updateSolvesListHandlers();
+  $('#timer').text(solvetime);
+  var s = addSolve(solvetime);
+  console.log(s)
+  addSolveToPage(s);
   getScramble();
 }
 
@@ -135,21 +153,106 @@ function addSolve(time) {
     id: solveid,
     scramble: scramble,
     tags: '',
-
+    comments: '',
+    type: currentgenerator
   };
 
   solves.push(solve);
+  solveid++;
   return solve;
 }
 
-function updateSolvesListHandlers() {
-  $('.solve-link').click(function() {
-    $(this).parents('td').html('');
+function resetSolves() {
+  solves = [];
+}
+
+function reconstructPageSolves() {
+  $('.solve-text').remove();
+  solves.forEach(function(s) {
+    addSolveToPage(s);
   });
 }
 
+function addSolveToPage(solve) {
+
+
+  var t = $('.solves-list').append(createSolveElement(solve));
+
+  //add solve handlers to all solves
+  addSolveHandlers();
+}
+
+function createSolveElement(solve) {
+
+  var d = createSolveElementData(solve);
+
+  return '<span class="' + d.classes + '" id="solve-' + solve.id + '" data-solve-id="' + solve.id + '">'+d.text+'</span> ';
+}
+
+function createSolveElementData(solve) {
+  var sid = solve.id;
+  var txt = solve.time;
+  var classes = 'solve-text';
+  if(solve.dnf) {
+    txt = 'DNF';
+    classes += ' solve-dnf';
+  } else if(solve.penalty) {
+    txt = (parseFloat(solve.time) + penalty).toFixed(2) + ' (+' + solve.penalty + ')';
+    classes += ' solve-penalty';
+  } else {
+    classes += ' solve-valid';
+  }
+
+  return {text:txt, classes:classes};
+}
+
+function addSolveHandlers() {
+  $('.solve-text').click(function() {
+    var aid = $(this).attr('data-solve-id')
+    var solve = solves.find(function(x) {return x.id == aid;})
+
+    $('.solve-active').removeClass('solve-active');
+    $(this).addClass('solve-active');
+
+    targetsolve = solve;
+    updateSolveInfoPane(targetsolve);
+  });
+}
+
+function updateSolveInfoPane(solve) {
+  if(solve.dnf) {
+    $('#solve-info-time').text('DNF');
+    $('#solve-info-penalty').text('+0');
+  } else {
+    $('#solve-info-time').text(solve.time);
+    $('#solve-info-penalty').text('+' + solve.penalty);
+  }
+  $('#solve-info-type').text(solve.type);
+  $('#solve-info-scramble').text(solve.scramble);
+  $('#solve-info-id').text(solve.id);
+}
+
+function resetSolveInfoPane() {
+  $('#solve-info-time').text('');
+  $('#solve-info-penalty').text('');
+  $('#solve-info-type').text('');
+  $('#solve-info-scramble').text('');
+  $('#solve-info-id').text('');
+}
+
+function updateTargetSolve() {
+  var ts = $('#solve-'+targetsolve.id)
+
+  ts.removeClass();
+
+  var d = createSolveElementData(targetsolve);
+
+  ts.addClass(d.classes);
+  ts.text(d.text);
+}
+
 function getScramble() {
-    scramble = generators['3x3'].get()[0];
+    scramble = generators[currentgenerator].get()[0];
     $('#scramble').text(scramble);
     if(settings.colorise) {
       coloriseScramble();
@@ -163,7 +266,7 @@ function coloriseScramble() {
   var colorised = parts.map(function(x) {
     var a = '';
     letters.forEach(function(f) {
-      if(x.indexOf(f) != -1) {
+      if(x.indexOf(f) != -1 || x.indexOf(f.toLowerCase()) != -1) {
         a = '<span class="s'+f+'">'+x+'</span>';
         return;
       }
@@ -180,7 +283,21 @@ function initSettings() {
   $('#settings-list input').on('change', function(e) {
     var cb = $(this);
     var setting = cb.attr('data-setting-name');
-    settings[setting] = cb.prop('checked');
+    var checked = cb.prop('checked');
+    settings[setting] = checked;
+
+    cb.blur();
+
+    switch (setting) {
+      case 'darkmode':
+        setDarkMode(checked);
+        break;
+      case 'colorise':
+        getScramble();
+        break;
+      default:
+        break;
+    }
 
     //save new settings to cookies
     Cookies.set('settings', settings);
@@ -195,6 +312,55 @@ function setDarkMode(b) {
   }
 }
 
+function addButtonListeners() {
+  $('.solve-info-box button').click(function(e) {
+    $(this).blur();
+  });
+  $('.solve-info-box #penalty-button').click(function(e) {
+    if(targetsolve) {
+      if(targetsolve.penalty == 0) {
+        targetsolve.penalty = 2;
+      } else if(targetsolve.penalty == 2){
+        targetsolve.penalty = 4;
+      } else {
+        targetsolve.penalty = 0;
+      }
+      updateTargetSolve();
+      updateSolveInfoPane(targetsolve);
+    }
+  });
+
+  $('.solve-info-box #dnf-button').click(function(e) {
+    if(targetsolve) {
+      targetsolve.dnf = !targetsolve.dnf;
+      updateTargetSolve();
+      updateSolveInfoPane(targetsolve);
+    }
+  });
+
+  $('.solve-info-box #delete-button').click(function(e) {
+    var id = targetsolve.id;
+    targetsolve = null;
+    solves = solves.filter(function(x) {
+      return x.id != id;
+    })
+    $('#solve-' + id).remove();
+    resetSolveInfoPane();
+  });
+
+  $('#reset-button').click(function(e) {
+    $(this).blur();
+    resetSolves();
+    reconstructPageSolves();
+    targetsolve = null;
+    resetSolveInfoPane();
+  });
+
+  $('#submit-button').click(function(e) {
+    //TODO: let users submit their times
+  });
+}
+
 //when the page is ready to do stuff
 $(document).ready(function() {
   //get settings from cookies
@@ -205,7 +371,10 @@ $(document).ready(function() {
 
   setDarkMode(settings.darkmode);
   //get a new scramble on button press
-  $('#getscramble').click(getScramble);
+  $('#getscramble').click(function() {
+    getScramble();
+    $(this).blur();
+  });
   //get first scramble
   getScramble();
   //reset the timer
@@ -215,16 +384,23 @@ $(document).ready(function() {
     if(!$(this).hasClass('disabled')) {
       //handle actually changing scramble type here
       $('#scrambletypetext').text($(this).text());
+      currentgenerator = $(this).attr('data-scramble-type');
+      $('#scrambletypelist li').removeClass('dropdown-selected');
+      $(this).parent().addClass('dropdown-selected');
+      getScramble();
     } else {
       //scramble type is currently disabled, do nothing
     }
   });
+  $('#scrambletypelist li a[data-scramble-type="3x3"]').click();
 
   //init solve list/settings tabs
   $('#right-col-tabs a').click(function (e) {
     e.preventDefault();
     $(this).tab('show');
   });
+
+  addButtonListeners();
 
   //handle spacebar pressing
   $('body').keyup(function(event) {
@@ -242,7 +418,8 @@ $(document).ready(function() {
       } else if(timerState == 'inspection') {
         stopInspection();
       } else if(timerState == 'dnf') {
-        addSolve('dnf');
+        var s = addSolve('dnf');
+        addSolveToPage(s);
         resetTimer();
       }
     }

@@ -2,13 +2,6 @@ body {
   background-color: #f6f6f6;
 }
 
-.row-eq-height {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
 .c1 {
   width: 800;
   /*padding-left: 40px;
@@ -32,12 +25,28 @@ body {
   text-align: center;
   vertical-align: middle;
   font-weight: normal;
-  color: #434a54
+  color: #434a54;
 }
 
 /* overwrite the non-rounded left corners of the button */
 #scramble-type-button {
+  margin-left: 15px;
   border-radius: 5px;
+}
+#scrambletypelist .divider {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  height:1px;
+  background-color: rgba(0,0,0,0.15);
+}
+#scrambletypelist li {
+  padding-left: 10px;
+}
+#scrambletypelist .dropdown-selected {
+  background-color: #eee;
+}
+.scrambleselect {
+  padding-left: 15px;
 }
 
 .timer-box {
@@ -114,8 +123,27 @@ table {
 .settings-container {
   padding: 0px;
 }
+.solves-container {
+  padding: 10px;
+}
 .sessionbody #settings-list li:first-child {
   border-top: none;
+}
+.sessionbody #solves-box-list li:first-child {
+  border-top: none;
+}
+.settings-container h5 {
+  margin-bottom: 15px;
+}
+
+
+
+.solve-text {
+  padding: 5px;
+}
+.solve-text:hover {
+  text-decoration: underline;
+  background-color: #f8f8f8;
 }
 
 .solve-valid {
@@ -138,6 +166,27 @@ table {
 .solve-link:hover {
   color: #E9573F;
 }
+
+.solve-info-box {
+  font-size: 0.8em;
+}
+
+.solve-info-box .divider {
+  margin: 10px;
+  height: 1px;
+  background-color: rgba(0,0,0,0.15);
+}
+
+#solve-info-scramble {
+  color: #aaa;
+}
+
+.solve-active {
+  font-weight: bold;
+  border: 1px solid #ddd;
+}
+
+
 /* scramble styles*/
 
 #scramble {
@@ -189,8 +238,93 @@ body.darkmode {
 }
 .darkmode .card {
   background-color: #373734;
-  border-color: #111111;
+  border-color: #181818;
 }
 .darkmode .card-header {
+  background-color: #F92672;
+  font-weight: bold;
   color: #222222;
+  border: none;
+}
+.darkmode .card-text {
+  color: #f8f8f8;
+}
+
+.darkmode .sessionbody li {
+  border-color: #181818;
+  background-color: #373734;
+  color: #f8f8f8;
+}
+.darkmode .sessionbody .divider {
+  background-color: #181818
+}
+
+.darkmode .sessionbody #right-col-tabs {
+  border: none;
+}
+.darkmode .sessionbody #right-col-tabs li a {
+  background-color: #F92672;
+  color: #373734;
+  border-radius: 0px;
+  font-weight: bold;
+}
+.darkmode .sessionbody #right-col-tabs li a:hover {
+  border-color: #F92672 #F92672 #ddd !important;
+  font-weight: bold;
+}
+.darkmode .sessionbody #right-col-tabs li a.active,
+.darkmode .sessionbody #right-col-tabs li a.active:hover {
+  background-color: #373734;
+  color: #f8f8f8;
+  border-color: #F92672 #F92672 transparent !important;
+  font-weight: bold;
+}
+
+.darkmode h1 {
+  color: #f8f8f8;
+}
+.darkmode #scramble {
+  color: #f8f8f8;
+}
+.darkmode #timer {
+  color: #f8f8f8;
+}
+.darkmode #getscramble {
+  background-color: #F92672;
+  color: #373734;
+  font-weight: bold;
+}
+
+.darkmode .sessionbody #right-col-tabs {
+  background-color: #F92672;
+  font-weight: bold;
+}
+
+.darkmode .solve-text:hover {
+  text-decoration: underline;
+  background-color: #444;
+}
+
+.darkmode .solve-active {
+  font-weight: bold;
+  border: 1px solid #555;
+}
+
+.darkmode .sU {
+  color: #E6DB74;
+}
+.darkmode .sD {
+  color: #FD971F;
+}
+.darkmode .sF {
+  color: #F92672;
+}
+.darkmode .sB {
+  color: #FF0000;
+}
+.darkmode .sL {
+  color: #66D9EF;
+}
+.darkmode .sR {
+  color: #A6E22E;
 }
