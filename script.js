@@ -24,7 +24,7 @@ var solves = [];
 var solveid = 0;
 var targetsolve = null;
 
-var inspectiontime = 2;
+var inspectiontime = 15;
 
 var currentgenerator = '3x3'
 // the current scramble as a string
