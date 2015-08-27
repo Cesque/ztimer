@@ -37,6 +37,7 @@ var penalty = 0;
 var timerState = 'stopped';
 
 var skipnextupdate = false;
+var cantstartyet = false;
 
 var start = new Date().getTime();
 
@@ -406,15 +407,21 @@ $(document).ready(function() {
   $('body').keyup(function(event) {
     if(event.which == 32){
       if(timerState == 'stopped'){
-        if(settings.inspection) {
-          resetTimer();
-          startInspection();
-        } else {
-          resetTimer();
-          startTimer();
+        if(!cantstartyet) {
+          if(settings.inspection) {
+            resetTimer();
+            startInspection();
+          } else {
+            resetTimer();
+            startTimer();
+          }
         }
       } else if (timerState == 'started'){
         stopTimer();
+        cantstartyet = true;
+        setTimeout(function() {
+          cantstartyet = false;
+        },500);
       } else if(timerState == 'inspection') {
         stopInspection();
       } else if(timerState == 'dnf') {
@@ -426,6 +433,10 @@ $(document).ready(function() {
       // hitting any key should stop the timer
       if (timerState == 'started'){
         stopTimer();
+        cantstartyet = true;
+        setTimeout(function() {
+          cantstartyet = false;
+        },500);
       }
     }
   });
