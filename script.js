@@ -422,6 +422,11 @@ $(document).ready(function() {
         addSolveToPage(s);
         resetTimer();
       }
+    } else {
+      // hitting any key should stop the timer
+      if (timerState == 'started'){
+        stopTimer();
+      }
     }
   });
 });
