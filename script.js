@@ -193,7 +193,6 @@ function createSolveElement(solve) {
 }
 
 function createSolveElementData(solve) {
-  var sid = solve.id;
   var txt = solve.time;
   var classes = 'solve-text';
   if (solve.dnf) {
