@@ -195,6 +195,26 @@ table {
   border: 1px solid #ddd;
 }
 
+/* session info (should be the same as solves info) */
+
+.session-info-box {
+  font-size: 0.8em;
+}
+
+.session-info-box .divider {
+  margin: 10px;
+  height: 1px;
+  background-color: rgba(0,0,0,0.15);
+}
+
+.session-info-box-container, 
+.solve-info-box-container {
+  background-color: rgb(240,240,240);
+}
+
+.session-info-average {
+  font-weight: bold;
+}
 
 /* scramble styles*/
 
@@ -317,6 +337,11 @@ body.darkmode {
 .darkmode .solve-active {
   font-weight: bold;
   border: 1px solid #555;
+}
+
+.darkmode .session-info-box-container, 
+.darkmode .solve-info-box-container {
+  background-color: rgb(47,47,44) !important;
 }
 
 .darkmode .sU {

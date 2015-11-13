@@ -70,31 +70,54 @@
                 <div id="session-solves" role="tabpanel" class="tab-pane active">
                   <ul class="list-group list-group-flush" id="settings-list">
                     <li class="list-group-item">
+                      <div class="session-info-box">
+                        <div class="session-info-line">Solves: <span id="solve-count" class="session-info-average"></span></div>
+                      </div>
+                    </li>
+                    <li class="list-group-item session-info-box-container">
+                      <div class="session-info-box">
+                        <div class="session-info-line">Session average: <span id="session-info-session-average" class="session-info-average"></span></div>
+                        <div id="session-info-averages-box">
+                          <div class="divider"></div>
+                          
+                          <div class="session-info-line ao5-line">AO5: <span id="session-info-ao5" class="session-info-average"></span></div>
+                          <div class="session-info-line ao12-line">AO12: <span id="session-info-ao12" class="session-info-average"></span></div>
+                          <div class="session-info-line ao50-line">AO50: <span id="session-info-ao50" class="session-info-average"></span></div>
+                          
+                          <div class="divider"></div>
+                          
+                          <div class="session-info-line ao5-line">Current AO5: <span id="session-info-current-ao5" class="session-info-average"></span></div>
+                          <div class="session-info-line ao12-line">Current AO12: <span id="session-info-current-ao12" class="session-info-average"></span></div>
+                          <div class="session-info-line ao50-line">Current AO50: <span id="session-info-current-ao50" class="session-info-average"></span></div>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="list-group-item">
                       <div class="solves-container">
                         <span class="solves-this-session">Solves this session: </span>
                         <button type="button" id="reset-button" class="btn btn-danger-outline btn-sm">Reset</button>
                         <button type="button" disabled id="submit-button" class="btn btn-success btn-sm">Submit</button>
                       </div>
-                    </li>
+                    </li>  
                     <li class="list-group-item">
                       <div class="solves-container solves-list">
                       </div>
                     </li>
-                    <li class="list-group-item">
-                    <div class="solve-info-box">
-                      <div class="solve-info-line">Time: <span id='solve-info-time'></span></div>
-                      <div class="solve-info-line">Penalty: <span id='solve-info-penalty'></span></div>
-                      <div class="solve-info-line">Type: <span id='solve-info-type'></span></div>
-                      <div class="solve-info-line">Scramble: <span id='solve-info-scramble'></span></div>
-                      <div class="divider"></div>
-                      <div class="solve-info-line">ID: <span id='solve-info-id'></span></div>
-                      <div class="solve-info-line">Tags: <span id='solve-info-tags'></span></div>
-                      <div class="solve-info-line">Comments: <span id='solve-info-comment'></span></div>
-                      <div class="divider"></div>
-                      <button type="button" id="penalty-button" class="btn btn-warning-outline btn-sm">Penalty</button>
-                      <button type="button" id="dnf-button"class="btn btn-warning-outline btn-sm">DNF</button>
-                      <button type="button" id="delete-button" class="btn btn-danger btn-sm">Delete</button>
-                    </div>
+                    <li class="list-group-item solve-info-box-container">
+                      <div class="solve-info-box">
+                        <div class="solve-info-line">Time: <span id='solve-info-time'></span></div>
+                        <div class="solve-info-line">Penalty: <span id='solve-info-penalty'></span></div>
+                        <div class="solve-info-line">Type: <span id='solve-info-type'></span></div>
+                        <div class="solve-info-line">Scramble: <span id='solve-info-scramble'></span></div>
+                        <div class="divider"></div>
+                        <div class="solve-info-line">ID: <span id='solve-info-id'></span></div>
+                        <div class="solve-info-line">Tags: <span id='solve-info-tags'></span></div>
+                        <div class="solve-info-line">Comments: <span id='solve-info-comment'></span></div>
+                        <div class="divider"></div>
+                        <button type="button" id="penalty-button" class="btn btn-warning-outline btn-sm">Penalty</button>
+                        <button type="button" id="dnf-button"class="btn btn-warning-outline btn-sm">DNF</button>
+                        <button type="button" id="delete-button" class="btn btn-danger btn-sm">Delete</button>
+                      </div>
                     </li>
                 </div><!-- session-solves -->
                 <div id="settings" role="tabpanel" class="tab-pane">

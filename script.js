@@ -14,7 +14,8 @@ var defaultsettings = {
   colorise: true,
   darkmode: true,
   inspection: true,
-  hidetimer: false
+  hidetimer: false,
+  timerprecision: 3,
 };
 
 // holds the current settings
@@ -44,7 +45,7 @@ var start = new Date().getTime();
 function resetTimer() {
   timerState = 'stopped'
   timer = 0;
-  $('#timer').text(timer.toFixed(2));
+  $('#timer').text(timer.toFixed(settings.timerprecision));
 }
 
 // start the timer
@@ -77,7 +78,7 @@ function updateTimer() {
   if (settings.hidetimer) {
     $('#timer').text('solving');
   } else {
-    $('#timer').text(timer.toFixed(2));
+    $('#timer').text(timer.toFixed(settings.timerprecision));
   }
   if (timerState == 'started') {
     setTimeout(function () {
@@ -135,20 +136,24 @@ function stopTimer() {
   skipnextupdate = true;
   timerState = 'stopped';
   var solvetime = timer.toFixed(2);
-  $('#timer').text(solvetime);
-  var s = addSolve(solvetime);
-  console.log(s)
+  $('#timer').text(timer.toFixed(settings.timerprecision));
+  var s = addSolve(timer);
   addSolveToPage(s);
+  updateAverages();
+  $('#solve-count').text(solves.length)
+  
+  //next solve!
   getScramble();
 }
 
 // if user DNF, then add a DNF solve to the solve list, otherwise add a normal solve
 function addSolve(time) {
   var dnf = time === 'dnf';
-  var tm = dnf ? 0.0 : time;
+  var tm = dnf ? 0.0 : time.toFixed(2);
 
   var solve = {
     time: tm,
+    precisetime: time,
     penalty: penalty,
     dnf: dnf,
     id: solveid,
@@ -165,6 +170,8 @@ function addSolve(time) {
 
 function resetSolves() {
   solves = [];
+  updateAverages()
+  $('#solve-info-box').hide();
 }
 
 function reconstructPageSolves() {
@@ -193,13 +200,13 @@ function createSolveElement(solve) {
 }
 
 function createSolveElementData(solve) {
-  var txt = solve.time;
+  var txt = solve.precisetime.toFixed(settings.timerprecision)
   var classes = 'solve-text';
   if (solve.dnf) {
     txt = 'DNF';
     classes += ' solve-dnf';
   } else if (solve.penalty) {
-    txt = (parseFloat(solve.time) + penalty).toFixed(2) + ' (+' + solve.penalty + ')';
+    txt = (parseFloat(solve.precisetime) + penalty).toFixed(2) + ' (+' + solve.penalty + ')';
     classes += ' solve-penalty';
   } else {
     classes += ' solve-valid';
@@ -218,6 +225,7 @@ function addSolveHandlers() {
 
     targetsolve = solve;
     updateSolveInfoPane(targetsolve);
+    $('.solve-info-box').show();
   });
 }
 
@@ -251,6 +259,148 @@ function updateTargetSolve() {
 
   ts.addClass(d.classes);
   ts.text(d.text);
+}
+
+function updateAverages() {
+  var sessionaverage = getSessionAverage();
+
+  var ao5 = getAO(5);
+  var currentao5 = getAOatIndex(5, solves.length - 5);
+
+  var ao12 = getAO(12);
+  var currentao12 = getAOatIndex(12, solves.length - 12);
+
+  var ao50 = getAO(50);
+  var currentao50 = getAOatIndex(50, solves.length - 50);
+
+  if (solves.length < 3) {
+    $('session-info-session-average').text('n/a');
+  } else {
+    $('#session-info-session-average').text(sessionaverage == 'dnf' ? 'DNF' : parseFloat(sessionaverage).toFixed(2));
+  }
+  $('#session-info-ao5').text(ao5.best == 'dnf' ? 'DNF' : parseFloat(ao5.best).toFixed(2));
+  $('#session-info-ao12').text(ao12.best == 'dnf' ? 'DNF' : parseFloat(ao12.best).toFixed(2));
+  $('#session-info-ao50').text(ao50.best == 'dnf' ? 'DNF' : parseFloat(ao50.best).toFixed(2));
+
+  $('#session-info-current-ao5').text(currentao5.best == 'dnf' ? 'DNF' : parseFloat(currentao5).toFixed(2));
+  $('#session-info-current-ao12').text(currentao12.best == 'dnf' ? 'DNF' : parseFloat(currentao12).toFixed(2));
+  $('#session-info-current-ao50').text(currentao50.best == 'dnf' ? 'DNF' : parseFloat(currentao50).toFixed(2));
+
+  if (solves.length < 5) {
+    $('.ao5-line').hide();
+    $('#session-info-averages-box').hide();
+  } else {
+    $('.ao5-line').show();
+    $('#session-info-averages-box').show();
+  }
+
+  if (solves.length < 12) {
+    $('.ao12-line').hide();
+  } else {
+    $('.ao12-line').show();
+  }
+
+  if (solves.length < 50) {
+    $('.ao50-line').hide();
+  } else {
+    $('.ao50-line').show();
+  }
+}
+
+function getSessionAverage() {
+  var dnfs = 0;
+  var sum = 0;
+
+  var max = 0;
+  var min = 999;
+  for (var i = 0; i < solves.length; i++) {
+    var s = solves[i];
+
+    if (s.dnf) {
+      dnfs++;
+      if (dnfs > 1) {
+        return 'dnf'
+      }
+    } else {
+      sum += parseFloat(s.time);
+
+      if (s.time > max) {
+        max = s.time;
+      }
+
+      if (s.time < min) {
+        min = s.time;
+      }
+    }
+  }
+
+  if (dnfs === 1) {
+    min = 0;
+  }
+
+  sum -= parseFloat(min);
+  sum -= parseFloat(max);
+
+  var avg = sum / (solves.length - 2);
+
+  return '' + avg;
+}
+
+function getAO(n) {
+  if (solves.length < n) {
+    return { averageof: n, best: 'N/A', index: -1 };
+  }
+
+  var bestindex = -1;
+  var best = 999;
+  for (var i = 0; i < solves.length - n + 1; i++) {
+    var average = getAOatIndex(n, i);
+    if (average === -1) {
+      return { averageof: n, best: 'N/A', index: -1 };
+    }
+    if (average < best) {
+      best = average;
+      bestindex = i;
+    }
+  }
+
+  return { averageof: n, best: best === 998 ? 'dnf' : best, index: bestindex };
+}
+
+function getAOatIndex(n, index) {
+  if (solves.length < index + n || index < 0) {
+    return -1;
+  }
+  var sum = 0;
+  var dnfs = 0;
+  var max = 0;
+  var min = 999;
+  for (var j = 0; j < n; j++) {
+    if (solves[index + j].dnf) {
+      dnfs += 1;
+    } else {
+      sum += parseFloat(solves[index + j].time);
+      if (solves[index + j].time > max) {
+        max = solves[index + j].time;
+      }
+      if (solves[index + j].time < min) {
+        min = solves[index + j].time;
+      }
+    }
+  }
+
+  if (dnfs > 1) {
+    return 998;
+  } else if (dnfs === 1) {
+    min = 0;
+  }
+
+  sum -= parseFloat(max);
+  sum -= parseFloat(min);
+
+  var average = sum / (n - 2);
+
+  return average;
 }
 
 function getScramble() {
@@ -402,7 +552,11 @@ $(document).ready(function () {
     $(this).tab('show');
   });
 
+  $('.solve-info-box').hide();
+
   addButtonListeners();
+  
+  updateAverages();
 
   //handle spacebar pressing
   $('body').keyup(function (event) {
