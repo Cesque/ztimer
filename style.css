@@ -21,10 +21,15 @@ h1 {
   color: #eee !important;
 }
 
+#leftcol {
+  padding-right: 6px;
+}
 
+#rightcol {
+  padding-left: 6px;
+}
 
 /* timer styles*/
-
 #timer {
   font-size: 7em;
   text-align: center;
