@@ -107,7 +107,7 @@ function stopTimer() {
   addSolveToPage(s);
   // updates all averages
   updateAverages();
-  $('#solve-count').text(solves.length)
+  updateSolvesCount();
   
   // get next solve!
   getScramble();
@@ -371,6 +371,7 @@ function addButtonListeners() {
     resetSolveInfoPane();
     // update averages due to solve being deleted
     updateAverages();
+    updateSolvesCount();
   });
 
   // on clicking the reset button, delete all solves and reset page
@@ -381,12 +382,17 @@ function addButtonListeners() {
     targetsolve = null;
     resetSolveInfoPane();
     updateAverages();
+    updateSolvesCount();
   });
 
   // on clicking the submit button, submit the session
   $('#submit-button').click(function (e) {
     //TODO: let users submit their times
   });
+}
+
+function updateSolvesCount() {
+  $('#solve-count').text(solves.length)
 }
 
 /* --------------------------- AVERAGES FUNCTIONS --------------------------- */
@@ -677,8 +683,6 @@ function setDarkMode(b) {
 
 /* --------------------------- ENTRY FUNCTION --------------------------- */
 
-
-
 // when the page is ready to do stuff
 $(document).ready(function () {
   // get settings from cookies
@@ -732,6 +736,7 @@ $(document).ready(function () {
   
   // update averages (which also hides them in this case)
   updateAverages();
+  updateSolvesCount();
 
   // handle space bar pressing. if a key was released...
   $('body').keyup(function (event) {
