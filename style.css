@@ -112,12 +112,10 @@ table {
   border-color: #19B5FE #19B5FE transparent !important;
 }
 
-#session-solves {
-  min-height: 300px;
+.sessionbody .last-child {
+  border-bottom: 0px;
 }
-#settings {
-  min-height: 300px;
-}
+
 .tab-pane {
   display: none;
 }
@@ -145,6 +143,10 @@ table {
 
 .solves-this-session {
   margin-right: 15px;
+}
+
+.solves-list {
+  min-height: 19px;
 }
 
 .solve-text {

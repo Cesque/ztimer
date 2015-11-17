@@ -211,7 +211,7 @@ function addSolve(time) {
 function resetSolves() {
   solves = [];
   updateAverages()
-  $('#solve-info-box').hide();
+  resetSolveInfoPanel();
 }
 
 // delete all solves on page and add them all again
@@ -279,8 +279,9 @@ function addSolveHandlers() {
     targetsolve = solve;
     updateSolveInfoPane(targetsolve);
     
-    // if the info box is hidden, show it
-    $('.solve-info-box').show();
+    // if the info box is hidden, show it, and we will probably also need to style it to remove the bottom margin
+    $('.solve-info-box-container').show();
+    styleLastListElementInRightCol();
   });
 }
 
@@ -299,12 +300,16 @@ function updateSolveInfoPane(solve) {
 }
 
 // reset the solve info panel to default, empty
-function resetSolveInfoPane() {
+function resetSolveInfoPanel() {
   $('#solve-info-time').text('');
   $('#solve-info-penalty').text('');
   $('#solve-info-type').text('');
   $('#solve-info-scramble').text('');
   $('#solve-info-id').text('');
+
+  $('.solve-info-box-container').hide();
+
+  styleLastListElementInRightCol()
 }
 
 // get the target solve element, reapply all classes and change text
@@ -368,7 +373,7 @@ function addButtonListeners() {
     // remove the solve element from the solves list on page
     $('#solve-' + id).remove();
     // no solve is now selected, clear solve info
-    resetSolveInfoPane();
+    resetSolveInfoPanel();
     // update averages due to solve being deleted
     updateAverages();
     updateSolvesCount();
@@ -380,7 +385,7 @@ function addButtonListeners() {
     resetSolves();
     reconstructPageSolves();
     targetsolve = null;
-    resetSolveInfoPane();
+    resetSolveInfoPanel();
     updateAverages();
     updateSolvesCount();
   });
@@ -681,6 +686,13 @@ function setDarkMode(b) {
   }
 }
 
+/**/
+
+function styleLastListElementInRightCol() {
+    $('.last-child').removeClass('last-child');
+    $('#settings-list > li:visible:last, #solves-box-list > li:visible:last').addClass('last-child');
+}
+
 /* --------------------------- ENTRY FUNCTION --------------------------- */
 
 // when the page is ready to do stuff
@@ -726,10 +738,11 @@ $(document).ready(function () {
   $('#right-col-tabs a').click(function (e) {
     e.preventDefault();
     $(this).tab('show');
+    styleLastListElementInRightCol();
   });
 
   // when first loading the page, hide the solve info box because no solves have been done yet
-  $('.solve-info-box').hide();
+  resetSolveInfoPanel();
 
   // add listeners to solve info buttons
   addButtonListeners();
