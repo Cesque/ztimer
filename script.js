@@ -1,3 +1,4 @@
+// ztimer by @cesque //
 
 // different puzzle generators
 var generators = {
