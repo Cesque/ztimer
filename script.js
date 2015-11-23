@@ -59,7 +59,7 @@ var start = new Date().getTime();
 function resetTimer() {
   timerState = 'stopped'
   timer = 0;
-  $('#timer').text(timer.toFixed(settings.timerprecision));
+  $('#timer').text(timer.toFixed(settings.timerprecision)).removeClass();
 }
 
 // start the timer
@@ -110,6 +110,7 @@ function stopTimer() {
   updateSolvesCount();
   
   // get next solve!
+  penalty = 0;
   getScramble();
 }
 
@@ -246,7 +247,7 @@ function createSolveElement(solve) {
 // HELPER FUNCTION, probably no reason to use
 // returns an object with the text of the element, and the classes that should be applied to it
 function createSolveElementData(solve) {
-  var txt = solve.precisetime.toFixed(settings.timerprecision)
+  var txt = solve.dnf ? '' : solve.precisetime.toFixed(settings.timerprecision)
   var classes = 'solve-text';
   if (solve.dnf) {
     txt = 'DNF';
@@ -673,7 +674,7 @@ function initSettings() {
     }
 
     // save new settings to cookies
-    Cookies.set('settings', settings);
+    Cookies.set('settings', settings, { expires: Infinity });
   });
 }
 
